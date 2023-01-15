@@ -1,0 +1,6 @@
+apollo:
+  endpoint: "http://127.0.0.1:8080/"
+  appid: "gf_user_task"
+  cluster: "default"
+  namespace: "GOLANG.basic,application"
+  pullInterval: 60000000000

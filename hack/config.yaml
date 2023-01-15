@@ -1,0 +1,26 @@
+gfcli:
+  gen:
+    dao:
+    - link: "mysql:gf_user:gf_user@tcp(127.0.0.1:3306)/gf_user"
+      group: "user"
+      overwriteDao: true
+      descriptionTag: true
+      path: "generated/user"
+    - link: "mysql:gf_task:gf_task@tcp(127.0.0.1:3306)/gf_task"
+      group: "task"
+      overwriteDao: true
+      descriptionTag: true
+      path: "generated/task"
+  build:
+    name:     "gf_user_task"
+    arch:     "arm64"
+    system:   "linux,darwin"
+    mod:      "none"
+    version:  ""
+    output:   "./bin"
+    packSrc:  "manifest/config,resource"
+    extra:    ""
+  docker:
+    build: "-a arm64 -s linux"
+    tagPrefixes:
+      - ccr.ccs.tencentyun.com/cdb.khaos.eros

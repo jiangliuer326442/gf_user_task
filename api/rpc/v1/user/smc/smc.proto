@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package smc;
+
+option go_package = "./smc;smc";
+
+service Smc{
+  rpc Register(RegisterSimpleReq) returns (RegisterSimpleRes) {}
+  rpc Login(LoginSimpleReq) returns (RegisterSimpleRes) {}
+}
+
+message RegisterSimpleReq {
+  string lang = 1;
+  string nickname = 2;
+  string password = 3;
+  string password2 = 4;
+}
+
+message RegisterSimpleRes {
+  int64 uid = 1;
+  string token = 2;
+}
+
+message LoginSimpleReq {
+  string lang = 1;
+  string nickname = 2;
+  string password = 3;
+}
