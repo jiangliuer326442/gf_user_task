@@ -12,6 +12,7 @@
 - 代码编译打包成docker镜像
 - 用grpc做rpc调用
 - 用etcd做rpc的服务发现
+- 使用rpcx做微服务调用
 - jaeger 做链路跟踪
 
 ## 操作命令

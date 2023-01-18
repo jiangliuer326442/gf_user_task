@@ -27,3 +27,7 @@ type LoginSimpleReq struct {
 type RpcReq struct {
 	g.Meta `path:"/rpc" tags:"Rpc" method:"get" summary:"微服务调用登陆"`
 }
+
+type Rpc2Req struct {
+	g.Meta `path:"/rpc2" tags:"Rpc" method:"get" summary:"微服务调用登陆"`
+}

@@ -2,14 +2,13 @@ package cmd
 
 import (
 	"context"
-	grpcSmcServoce "gf_user_task/generated/user/protobuf/smc"
 	userController "gf_user_task/internal/controller/user"
 	myMiddleware "gf_user_task/internal/library/middleware"
 	smcService "gf_user_task/internal/logic/user/smc"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
-	"github.com/gogf/katyusha/krpc"
+	rpcxServer "github.com/smallnest/rpcx/server"
 )
 
 var (
@@ -32,9 +31,15 @@ var (
 				panic(err)
 			}
 
-			s2 := krpc.Server.NewGrpcServer()
-			grpcSmcServoce.RegisterSmcServer(s2.Server, smcService.New())
-			s2.Start()
+			//s2 := krpc.Server.NewGrpcServer()
+			//grpcSmcServoce.RegisterSmcServer(s2.Server, smcService.New())
+			//s2.Start()
+
+			s3 := rpcxServer.NewServer()
+			s3.RegisterName("Smc", smcService.New(), "")
+			go func() {
+				s3.Serve("tcp", ":8772")
+			}()
 
 			g.Wait()
 			return nil

@@ -2,6 +2,7 @@ package smc
 
 import (
 	"context"
+	userSmcApi "gf_user_task/api/web/v1/user/smc"
 	"gf_user_task/generated/user/model/entity"
 	grpcSmcServoce "gf_user_task/generated/user/protobuf/smc"
 	"gf_user_task/internal/consts"
@@ -66,37 +67,37 @@ func (u *NickPwdUser) Register(gcontext context.Context, q *grpcSmcServoce.Regis
 	}, nil
 }
 
-func (u *NickPwdUser) Login(gcontext context.Context, q *grpcSmcServoce.LoginSimpleReq) (r *grpcSmcServoce.RegisterSimpleRes, err error) {
+func (u *NickPwdUser) Login(gcontext context.Context, q *userSmcApi.LoginSimpleReq, r *userSmcApi.RegisterSimpleRes) (err error) {
 	gcontext, span := gtrace.NewSpan(gcontext, "Login")
 	defer span.End()
 	userEntity, err3 := user.GetByNickname(gcontext, q.Nickname)
 	if err3 != nil {
-		return nil, err3
+		return err3
 	}
 	if userEntity == nil {
-		return nil, gerror.NewCode(consts.CodeNicknameNonExisted, g.I18n().Translate(gcontext, consts.CodeNicknameNonExisted.Message()))
+		return gerror.NewCode(consts.CodeNicknameNonExisted, g.I18n().Translate(gcontext, consts.CodeNicknameNonExisted.Message()))
 	}
 
 	pwdEncrypted, err4 := generatePwd(gcontext, q.Password)
 	glog.Debug(gcontext, "passwordmd5", q.Password, pwdEncrypted)
 	if err4 != nil {
-		return nil, err4
+		return err4
 	}
 
 	if pwdEncrypted != userEntity.Password {
-		return nil, gerror.NewCode(consts.CodePasswordNotComple, g.I18n().Translate(gcontext, consts.CodePasswordNotComple.Message()))
+		return gerror.NewCode(consts.CodePasswordNotComple, g.I18n().Translate(gcontext, consts.CodePasswordNotComple.Message()))
 	}
 	uid := userEntity.Id
 
 	token, err3 := generateToken(gcontext, uid)
 	if err3 != nil {
-		return nil, err3
+		return err3
 	}
 
-	return &grpcSmcServoce.RegisterSimpleRes{
-		Uid:   int64(uid),
-		Token: token,
-	}, nil
+	r.Uid = int64(uid)
+	r.Token = token
+
+	return nil
 }
 
 func generatePwd(ctx context.Context, pwd string) (string, error) {
